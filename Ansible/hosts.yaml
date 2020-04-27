@@ -1,0 +1,16 @@
+all:
+  hosts:
+    pcldevelastic01:
+      ansible_host: 127.0.0.1
+      ansible_port: 1222
+      ansible_connection: local
+      ansible_user: chunt
+
+  children:
+    ansible_test:
+      hosts:
+        pcldevapache:
+          amsible_host: 10.9.20.17
+          ansible_port: 12222
+          ansible_connection: smart
+          ansible_user: chunt

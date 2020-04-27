@@ -1,0 +1,25 @@
+export GREP_COLOR='1;32'
+export CMD_DELAY=5
+
+export USER_DIR="/home/chunt"
+export ANS_GIT_DIR="${USER_DIR}/git/MDAnsible"
+export ANS_ALIAS_FILE="${ANS_GIT_DIR}/env/ans.alias"
+
+
+ansible_details() {
+    echo
+    echo "ANSIBLE ALIASES"
+    echo "----------------------------"
+    alias | grep --color 'ans[[:alpha:]_]\{1,\}='
+    echo
+}
+
+# ---------------------------------------------
+# ANSIBLE ALIASES
+# ---------------------------------------------
+alias ans_hosts='sudo nano /etc/ansible/hosts'
+alias ans_alias='nano ${ANS_ALIAS_FILE}; source ${ANS_ALIAS_FILE}; echo "Sourced ${ANS_ALIAS_FILE}."'
+
+
+
+alias ans_info='ansible_details'
