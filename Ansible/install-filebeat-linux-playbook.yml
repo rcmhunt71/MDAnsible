@@ -1,4 +1,5 @@
-- hosts: pcldevapache
+- name: Install filebeat, if necessary
+  hosts: pcldevapache
   remote_user: chunt
   become: yes
   become_method: sudo

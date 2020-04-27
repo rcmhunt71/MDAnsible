@@ -10,7 +10,7 @@ all:
     ansible_test:
       hosts:
         pcldevapache:
-          amsible_host: 172.19.100.61
+          ansible_host: 172.19.100.61
           ansible_port: 12222
           ansible_connection: smart
           ansible_user: chunt

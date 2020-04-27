@@ -1,0 +1,20 @@
+- hosts: pcldevapache
+  remote_user: chunt
+  become: yes
+  become_method: sudo
+  gather_facts: True
+  vars:
+    log_type: apache
+    log_path: /var/logs/apache2/*
+    logstash_server: 172.17.0.199
+    logstash_port: 5345
+
+  tasks:
+    - debug: var=[log_type]
+
+    - name: Copy template over to target server
+      template:
+        src: ./templates/filebeat.cfg.j2
+        dest: /etc/filebeat/filebeat.yml
+        owner: root
+        mode: 0644
