@@ -24,9 +24,6 @@ filebeat.inputs:
   #
   paths:
   - {{log_path}}
-    # LIST OF PATHS
-    # - c:\programdata\elasticsearch\logs\*
-    # - "c:\program files\filebeat\logs\*"
 
   ### Multiline options
   # The regexp Pattern that has to be matched. The example pattern matches all lines starting with [
@@ -45,9 +42,6 @@ filebeat.inputs:
   # UPDATE: Add a field for TYPE (PRICE/LOS/etc.)
   # ======================================================
   fields:
-  # type: <COMPONENT:[PRICE|LOS|...ETC...]>
-  # type: PRICE
-  # type: LOS
     type: {{log_type}}
 
 #============================= Filebeat modules ===============================
