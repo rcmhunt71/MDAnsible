@@ -1,16 +1,27 @@
 all:
   hosts:
+
     pcldevelastic01:
       ansible_host: 127.0.0.1
       ansible_port: 1222
+      ansible_user: rhunt
       ansible_connection: local
-      ansible_user: chunt
 
   children:
     ansible_test:
       hosts:
+
         pcldevapache:
           ansible_host: 172.19.100.61
           ansible_port: 12222
+          ansible_user: rhunt
           ansible_connection: smart
-          ansible_user: chunt
+
+        pcldevweb05:
+          ansible_host: 10.9.20.15
+          ansible_port: 5985
+          ansible_user: rhunt@DEVELOPMENT.PCLENDER.LOCAL
+          ansible_connection: winrm
+          ansible_winrm_transport: kerberos
+          ansible_winrm_cert_validation: ignore
+          anisble_become: false
