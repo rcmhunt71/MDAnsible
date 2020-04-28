@@ -1,0 +1,6 @@
+Configuring Kerberos:
+https://www.virtualizationhowto.com/2018/04/configure-ansible-windows-server-kerberos-authentication-in-ubuntu/
+
+Setting up Windows PS remote commands:
+https://4sysops.com/archives/using-windows-powershell-with-ansible/
+https://4sysops.com/wiki/enable-powershell-remoting/
