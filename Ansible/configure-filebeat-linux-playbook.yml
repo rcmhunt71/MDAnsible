@@ -3,18 +3,23 @@
   become: yes
   become_method: sudo
   gather_facts: True
+
+  vars_files:
+    - vars/logstash_details.yml
+
   vars:
     log_type: APACHE
     log_path: /var/logs/apache2/*
-    logstash_server: 172.17.0.199
-    logstash_port: 5345
 
   tasks:
+    - set_fact: logstash_port={{vars['logstash_port_'+ log_type|lower] }}
+
     - debug: var=[log_type]
+    - debug: var=[logstash_port]
 
     - name: Copy template over to target server
       template:
-        src: ./templates/filebeat.cfg.j2
+        src: templates/filebeat.cfg.j2
         dest: /etc/filebeat/filebeat.yml
         owner: root
         mode: 0644
