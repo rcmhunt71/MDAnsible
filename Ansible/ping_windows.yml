@@ -1,5 +1,5 @@
 - name: Ping
-  hosts: pcldevweb05
+  hosts: pcldevweb06
  
   tasks:
   - name: ping
