@@ -4,3 +4,8 @@ https://www.virtualizationhowto.com/2018/04/configure-ansible-windows-server-ker
 Setting up Windows PS remote commands:
 https://4sysops.com/archives/using-windows-powershell-with-ansible/
 https://4sysops.com/wiki/enable-powershell-remoting/
+
+
+Incorrect WinRM Cert Warning:
+https://www.mail-archive.com/ansible-project@googlegroups.com/msg34460.html
+
