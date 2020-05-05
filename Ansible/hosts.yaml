@@ -26,7 +26,7 @@ all:
           ansible_user: rhunt@DEVELOPMENT.PCLENDER.LOCAL
           ansible_connection: winrm
           ansible_winrm_transport: kerberos
-          ansible_winrm_cert_validation: ignore
+          ansible_winrm_server_cert_validation: ignore
           anisble_become: false
 
         pcldevweb06:
@@ -38,5 +38,5 @@ all:
           ansible_user: rhunt@DEVELOPMENT.PCLENDER.LOCAL
           ansible_connection: winrm
           ansible_winrm_transport: kerberos
-          ansible_winrm_cert_validation: ignore
+          ansible_winrm_server_cert_validation: ignore
           anisble_become: false
