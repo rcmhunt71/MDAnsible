@@ -1,6 +1,5 @@
 all:
   hosts:
-
     pcldevelastic01:
       ansible_host: 127.0.0.1
       ansible_port: 1222
@@ -8,35 +7,35 @@ all:
       ansible_connection: local
 
   children:
-    development_servers:
-      hosts:
+    web_servers:
+      children:
+        web_hosts:
+          hosts:
+            pcldevweb06:
+              ansible_host: PCLDEVWEB06.DEVELOPMENT.PCLENDER.LOCAL
+#               HTTPS
+#               ansible_port: 5986
+#               HTTP
+#               ansible_port: 5985
+              ansible_port: 5985
+              ansible_user: rhunt@DEVELOPMENT.PCLENDER.LOCAL
+              ansible_connection: winrm
+              ansible_winrm_transport: kerberos
+              ansible_winrm_server_cert_validation: ignore
+              ansible_become: false
 
-        pcldevapache:
-          ansible_host: PCLDEVAPACHE.DEVELOPMENT.PCLENDER.LOCAL
-          ansible_port: 12222
-          ansible_user: rhunt
-          ansible_connection: smart
+        web_static:
+          hosts:
+            pcldevapache:
+              ansible_host: PCLDEVAPACHE.DEVELOPMENT.PCLENDER.LOCAL
+              ansible_port: 12222
+              ansible_user: rhunt
+              ansible_connection: smart
 
-        pcldevweb05:
-          ansible_host: PCLDEVWEB05.DEVELOPMENT.PCLENDER.LOCAL
-#          HTTPS
-#          ansible_port: 5986
-#          HTTP
-          ansible_port: 5985
-          ansible_user: rhunt@DEVELOPMENT.PCLENDER.LOCAL
-          ansible_connection: winrm
-          ansible_winrm_transport: kerberos
-          ansible_winrm_server_cert_validation: ignore
-          anisble_become: false
-
-        pcldevweb06:
-          ansible_host: PCLDEVWEB06.DEVELOPMENT.PCLENDER.LOCAL
-#          HTTPS
-#          ansible_port: 5986
-#          HTTP
-          ansible_port: 5985
-          ansible_user: rhunt@DEVELOPMENT.PCLENDER.LOCAL
-          ansible_connection: winrm
-          ansible_winrm_transport: kerberos
-          ansible_winrm_server_cert_validation: ignore
-          anisble_become: false
+        web_database: 
+          hosts:
+            pcldevlab01:
+              ansible_host: PCLDEVLAB01.DEVELOPMENT.PCLENDER.LOCAL
+              ansible_port: 12222
+              ansible_user: rhunt
+              ansible_connection: smart  

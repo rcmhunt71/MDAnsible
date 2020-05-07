@@ -1,0 +1,49 @@
+#2345678911234567892123456789312345678941234567895123456789612345678971234567898
+
+# This is the Ansible PLAYBOOK framework for deploying the WEB aspects of 
+# Mortgage Director.
+
+# -------------------------------------------------
+# REQUIRED CLI ARGS:
+# - "OLD_VERSION": "Major.Minor.Hotfix.Build"
+# -------------------------------------------------
+
+
+# 1) Backup the current version
+
+# 1a) Backup the pclender database
+# ---------------------------------------------------------------------------
+# CREATE PLAYBOOK FOR THE FOLLOWING (using checklist from prod):
+#   A. Backup pclender database on PCLUATWEBDB01 (10.0.102.21)
+#        a. Log into SQLYog
+#        b. Right click on the pclender database and choose Backup/Export
+#        c. Backup Database as SQL Dump
+#        d. Select Structure & Data
+#        e. Export to D:\Backup\ and choose an appropriate file name
+#        f. Export
+- name: Deploy the Web image to the target servers
+  hosts: web_hosts
+  vars_files:
+    - vars/deployment_vars.yaml
+
+
+# 1b) Backup the primary Apache Website  (Windows) --> USES "OLD_VERSION"
+- import_playbook: backup_primary_website.yaml
+
+# 1c) Backup the static content (Linux) --> USES "OLD_VERSION"
+- import_playbook: backup_static_web_content.yaml
+
+
+# 2) Get the file {version}.7z from ftp server
+
+# 3) Extract the file
+
+# 4) Copy the contents to the primary server (Windows)
+
+# 5) Copy the media folder to /var/www/websites of NGINX 
+
+# 6) Restart the Apache services
+
+# 7) Delete all my.js and my.css from /var/www/websites/site folder on NGINX
+#    - rm -rf /var/www/websites/media/site/*/my.js 
+#    - /var/www/websites/media/site/*/my.css

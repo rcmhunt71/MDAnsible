@@ -1,0 +1,91 @@
+# Archive/backup the current website to an archive directory on WINDOWS server
+
+# The following variables need to be provided via the commandline:
+#   OLD_VERSION - The version to be backed up and replaced.
+
+- name: Archive the current website
+  hosts: web_hosts
+  gather_facts: yes
+  vars:
+    ARCHIVE_FILE_NAME: '{{ OLD_VERSION }}_BACKUP.7z'
+  vars_files:
+    - vars/deployment_vars.yaml
+    - ../OS/windows/vars/zip_utility.yaml
+
+  tasks:
+  # ----------------------------------------------------------------------------------------
+  # Display the OLD_VERSION variable (provided by CLI)
+  # ----------------------------------------------------------------------------------------
+  - debug:
+      msg:
+      - 'OLD_VERSION: {{ OLD_VERSION }}'
+      - 'ARCHIVE_FILE_NAME: {{ ARCHIVE_FILE_NAME }}'
+
+  # ----------------------------------------------------------------------------------------
+  # Create a ZIP archive of the existing website
+  # ----------------------------------------------------------------------------------------
+  - name: Archive the existing website directory
+    win_shell: 'cmd /c "{{ ZIP_EXECUTABLE }}" a -bd -mx9 -sdel -r {{ ARCHIVE_FILE_NAME }} *'
+    args:
+      chdir: '{{ WEB_SITES_DIR }}'
+    register: _ARCHIVE_ZIP
+
+  # ----------------------------------------------------------------------------------------
+  # Display the results of the zipping process
+  # ----------------------------------------------------------------------------------------
+  - debug:
+      msg:
+      - 'CMD: {{ _ARCHIVE_ZIP.cmd }}'
+      - 'ZIP ELASPED TIME: {{ _ARCHIVE_ZIP.delta }}'
+      - '{{ _ARCHIVE_ZIP.stdout_lines }}'
+
+  # ----------------------------------------------------------------------------------------
+  # Get the stat info about the file, to verify the integrity after copying.   
+  # ----------------------------------------------------------------------------------------
+  - name: Get the stat info about the ZIP file
+    win_stat:
+      path: '{{ WEB_SITES_DIR }}\{{ ARCHIVE_FILE_NAME }}'
+    register: _ARCHIVE_SRC_FILE_STAT
+
+  # ----------------------------------------------------------------------------------------
+  # Copy the Zip file to the target ARCHIVE directory
+  # ----------------------------------------------------------------------------------------
+  - name: Copy Archive File to Archive Directory
+    win_copy:
+      src: '{{ WEB_SITES_DIR }}\{{ ARCHIVE_FILE_NAME }}'
+      dest: '{{ WEB_ARCHIVE_DIR }}\{{ ARCHIVE_FILE_NAME }}'
+      backup: no
+      remote_src: yes
+
+  # ----------------------------------------------------------------------------------------
+  # Get the file stat information about the copied file
+  # ----------------------------------------------------------------------------------------
+  - name: Get stat info about COPIED archive file
+    win_stat:
+      path: '{{ WEB_ARCHIVE_DIR }}\{{ ARCHIVE_FILE_NAME }}'
+    register: _ARCHIVE_COPY_FILE_STAT
+
+  # ----------------------------------------------------------------------------------------
+  # Delete the original (src) zip file if the dest zip file exists and 
+  # the checksums are the same
+  # ----------------------------------------------------------------------------------------
+  - name: Delete SOURCE Archive file
+    win_file:
+      path: '{{ WEB_SITES_DIR }}\{{ ARCHIVE_FILE_NAME }}'
+      state: absent
+    when: 
+      - _ARCHIVE_COPY_FILE_STAT.stat.exists 
+      - _ARCHIVE_COPY_FILE_STAT.stat.checksum == _ARCHIVE_SRC_FILE_STAT.stat.checksum
+
+  # ----------------------------------------------------------------------------------------
+  # Unable to delete the file due to file missing or checksums do no match
+  # so fail the playbook 
+  # ----------------------------------------------------------------------------------------
+  - fail:
+      msg: |
+        'COPIED Archive File exists: {{ _ARCHIVE_COPY_FILE_STAT.stat.exists }}'
+        'SOURCE Archive Checksum: {{ _ARCHIVE_SRC_FILE_STAT.stat.checksum }}'
+        'COPIED Archive Checksum: {{ _ARCHIVE_COPY_FILE_STAT.stat.checksum }}'
+    when: not _ARCHIVE_COPY_FILE_STAT.stat.exists or  
+      _ARCHIVE_COPY_FILE_STAT.stat.checksum != _ARCHIVE_SRC_FILE_STAT.stat.checksum
+

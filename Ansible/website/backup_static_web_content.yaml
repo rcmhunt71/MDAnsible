@@ -1,0 +1,87 @@
+# Archive/backup the current website static content to an archive directory on a LINUX server
+
+# The following variables need to be provided via the commandline:
+#   OLD_VERSION - The version to be backed up and replaced.
+
+- name: Archive the static web files
+  hosts: web_static
+  gather_facts: yes
+  vars:
+    ARCHIVE_FILE_NAME: '{{ OLD_VERSION }}_STATICS_BACKUP.7z'
+  vars_files:
+    - vars/deployment_vars.yaml
+
+  tasks:
+  # ----------------------------------------------------------------------------------------
+  # Display the OLD_VERSION variable (provided by CLI)
+  # ----------------------------------------------------------------------------------------
+  - debug:
+      msg:
+      - 'OLD_VERSION: {{ OLD_VERSION }}'
+      - 'ARCHIVE_FILE_NAME: {{ ARCHIVE_FILE_NAME }}'
+
+  # ----------------------------------------------------------------------------------------
+  # Check if the zip already exists in the archive dir; if so, DELETE IT (for now)
+  # ----------------------------------------------------------------------------------------
+  - name: Check for the existance of the archived zip file
+    stat:
+      path: '{{ STATICS_ARCHIVE_DIR }}/{{ ARCHIVE_FILE_NAME }}'
+    register: _ARCHIVE_EXISTS
+
+  - name: Delete existing ZIP file
+    file:
+      path: '{{ STATICS_ARCHIVE_DIR }}/{{ ARCHIVE_FILE_NAME }}'
+      state: absent
+    when: _ARCHIVE_EXISTS.stat.exists
+
+  # ----------------------------------------------------------------------------------------
+  # Destructively archive the existing website statics and copy to STATICS_ARCHIVE_DIR
+  # ----------------------------------------------------------------------------------------
+  - name: Archive the existing website static directory
+    archive:
+      path: '{{ STATICS_DIR }}'
+      dest: '{{ STATICS_ARCHIVE_DIR }}/{{ ARCHIVE_FILE_NAME }}'
+      remove: yes
+      owner: 'rhunt'
+      mode: 0644
+    register: _STATIC_ZIP_FILE
+
+  # ----------------------------------------------------------------------------------------
+  # Get information about the archived file (stat: size)
+  # ----------------------------------------------------------------------------------------
+  - name: Get archived file stat information
+    stat:
+      path: '{{ STATICS_ARCHIVE_DIR }}/{{ ARCHIVE_FILE_NAME }}'
+    register: _STATIC_ZIP_FILE_INFO
+
+  - debug:
+      msg: 
+      - "Copied to: {{ _STATIC_ZIP_FILE.dest }}"
+      - "Size: {{ _STATIC_ZIP_FILE_INFO.stat.size }} bytes"
+      - "Archive Contents:"
+      - '{{ _STATIC_ZIP_FILE.archived }}'
+
+  # ----------------------------------------------------------------------------------------
+  # Deletion during the zipping process does not remove the directories.
+  # Get a list of the directories still in the source directory
+  # ----------------------------------------------------------------------------------------
+  - name: Get list of directories in source directory. (Archiving does not remove the directories)
+    find:
+      path: "{{ STATICS_DIR }}/"
+      hidden: true
+      recurse: true
+      file_type: directory
+    register: _TARGET_DEL_DIRS
+
+  - debug:
+       msg: "{{ item.path }}"
+    loop: "{{ _TARGET_DEL_DIRS.files }}"
+
+  # ----------------------------------------------------------------------------------------
+  # Delete the identified directories
+  # ----------------------------------------------------------------------------------------
+  - name: Delete directories found in source directory
+    file:
+      path: "{{ item.path }}"
+      state: absent
+    with_items: "{{ _TARGET_DEL_DIRS.files }}"
