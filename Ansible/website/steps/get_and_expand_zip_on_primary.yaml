@@ -54,7 +54,7 @@
   # Unpack the downloaded ZIP file.
   # ----------------------------------------------------------------------------------------
   - name: Unpack the zip in the target directory
-    win_shell: 'cmd /c "{{ ZIP_EXECUTABLE }}" x -bd {{ _NEW_VERSION_WEB_ZIP }}'
+    win_shell: 'cmd /c "{{ ZIP_EXECUTABLE }}" x -bd -y {{ _NEW_VERSION_WEB_ZIP }}'
     args:
       chdir: '{{ WEB_SITES_DIR }}'
     register: UNZIP_RESULTS
