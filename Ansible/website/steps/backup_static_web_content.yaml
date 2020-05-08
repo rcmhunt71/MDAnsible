@@ -42,7 +42,7 @@
       path: '{{ STATICS_DIR }}'
       dest: '{{ STATICS_ARCHIVE_DIR }}/{{ ARCHIVE_FILE_NAME }}'
       remove: yes
-      owner: 'rhunt'
+      owner: rhunt
       mode: 0644
     register: _STATIC_ZIP_FILE
 
@@ -56,9 +56,9 @@
 
   - debug:
       msg: 
-      - "Copied to: {{ _STATIC_ZIP_FILE.dest }}"
-      - "Size: {{ _STATIC_ZIP_FILE_INFO.stat.size }} bytes"
-      - "Archive Contents:"
+      - 'Copied to: {{ _STATIC_ZIP_FILE.dest }}'
+      - 'Size: {{ _STATIC_ZIP_FILE_INFO.stat.size }} bytes'
+      - 'Archive Contents:'
       - '{{ _STATIC_ZIP_FILE.archived }}'
 
   # ----------------------------------------------------------------------------------------
@@ -67,21 +67,21 @@
   # ----------------------------------------------------------------------------------------
   - name: Get list of directories in source directory. (Archiving does not remove the directories)
     find:
-      path: "{{ STATICS_DIR }}/"
+      path: '{{ STATICS_DIR }}/'
       hidden: true
       recurse: true
       file_type: directory
     register: _TARGET_DEL_DIRS
 
   - debug:
-       msg: "{{ item.path }}"
-    loop: "{{ _TARGET_DEL_DIRS.files }}"
+       msg: '{{ item.path }}'
+    loop: {{ _TARGET_DEL_DIRS.files }}
 
   # ----------------------------------------------------------------------------------------
   # Delete the identified directories
   # ----------------------------------------------------------------------------------------
   - name: Delete directories found in source directory
     file:
-      path: "{{ item.path }}"
+      path: {{ item.path }}
       state: absent
-    with_items: "{{ _TARGET_DEL_DIRS.files }}"
+    with_items: {{ _TARGET_DEL_DIRS.files }}

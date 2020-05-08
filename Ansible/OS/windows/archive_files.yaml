@@ -16,7 +16,7 @@
   tasks:
   - name: Make the test target directory
     win_file:
-      path: "{{ ARCHIVE_DIR }}"
+      path: '{{ ARCHIVE_DIR }}'
       state: directory
 
   - name: Copy a series of target files to be archived (Optional, could archive source directly)
@@ -43,6 +43,6 @@
 
       - debug:
           msg: 
-            - "CMD: {{ ZIP_LISTING.cmd }}"
-            - "FAILED? {{ ZIP_LISTING.failed }}"
-            - "{{ ZIP_LISTING.stdout_lines }}"
+            - 'CMD: {{ ZIP_LISTING.cmd }}'
+            - 'FAILED? {{ ZIP_LISTING.failed }}'
+            - '{{ ZIP_LISTING.stdout_lines }}'

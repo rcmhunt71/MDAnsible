@@ -15,11 +15,11 @@
   tasks:
   - name: Create Directory (./create) on Remote Server
     win_file:
-      path: "{{ NEW_DIR }}"
+      path: '{{ NEW_DIR }}'
       state: directory
 
   - name: Get Directory listing in DEST directory
-    win_shell: "dir {{ DEST_DIR }}"
+    win_shell: 'dir {{ DEST_DIR }}'
     register: dest_dir_contents
 
   - debug:
@@ -27,11 +27,11 @@
 
   - name: Create File (test.dat) In New Directory on Remote Server
     win_file:
-      path: "{{ NEW_FILE_1 }}"
+      path: '{{ NEW_FILE_1 }}'
       state: touch
 
   - name: Get Directory listing in DEST directory
-    win_shell: "dir {{ NEW_DIR }}"
+    win_shell: 'dir {{ NEW_DIR }}'
     register: dest_dir_contents
 
   - debug:
@@ -39,11 +39,11 @@
 
   - name: Create File (test_del.dat) In New Directory on Remote Server
     win_file:
-      path: "{{ NEW_FILE_2 }}"
+      path: '{{ NEW_FILE_2 }}'
       state: touch
 
   - name: Get Directory listing in DEST directory
-    win_shell: "dir {{ NEW_DIR }}"
+    win_shell: 'dir {{ NEW_DIR }}'
     register: dest_dir_contents
 
   - debug:
@@ -51,11 +51,11 @@
 
   - name: Delete File (test_del.dat) In Newly Created Directory on Remote Server 
     win_file:
-      path: "{{ NEW_FILE_2 }}"
+      path: '{{ NEW_FILE_2 }}'
       state: absent
 
   - name: Get Directory listing in DEST directory
-    win_shell: "dir {{ NEW_DIR }}"
+    win_shell: 'dir {{ NEW_DIR }}'
     register: dest_dir_contents
 
   - debug:
@@ -63,11 +63,11 @@
 
   - name: Delete New Directory
     win_file:
-      path: "{{ NEW_DIR }}"
+      path: '{{ NEW_DIR }}'
       state: absent
 
   - name: Get Directory listing in DEST directory
-    win_shell: dir "{{ DEST_DIR }}"
+    win_shell: 'dir {{ DEST_DIR }}'
     register: dest_dir_contents
 
   - debug:

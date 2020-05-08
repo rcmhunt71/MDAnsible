@@ -7,8 +7,8 @@
   tasks:
   - name: Copy FROM and TO Same Remote Server
     win_copy:
-      src: '{{SRC_DIR}}/'
-      dest: '{{DEST_DIR}}'
+      src: '{{ SRC_DIR }}/'
+      dest: '{{ DEST_DIR }}'
       backup: no
       remote_src: yes
 

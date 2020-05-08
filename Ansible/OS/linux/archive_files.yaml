@@ -12,12 +12,12 @@
 
     - name: Check if target directory exists
       stat:
-        path: "{{ TARGET_DIR }}"
+        path: '{{ TARGET_DIR }}'
       register: TARGET_FILE_EXISTS
 
     - name: Compress directory /home/rhunt/temp/ to /tmp
       archive:
-        path: "{{ TARGET_DIR }}"
+        path: '{{ TARGET_DIR }}'
         dest: /tmp/archived_files.gz
         owner: rhunt
         format: gz
