@@ -9,8 +9,8 @@
   vars:
     ARCHIVE_FILE_NAME: '{{ OLD_VERSION }}_BACKUP.7z'
   vars_files:
-    - vars/deployment_vars.yaml
-    - ../OS/windows/vars/zip_utility.yaml
+    - ../vars/deployment_vars.yaml
+    - ../../OS/windows/vars/zip_utility.yaml
 
   tasks:
   # ----------------------------------------------------------------------------------------

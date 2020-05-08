@@ -16,4 +16,5 @@ STATICS_ARCHIVE_DIR: '/tmp'
 NGINX_SOURCE_DIR: /home/rhunt/nginx
 NGINX_WEBSITES_DIR: '{{ NGINX_SOURCE_DIR}}/websites'
 NGINX_MEDIA_SITE_DIR: '{{ NGINX_WEBSITES_DIR }}/media/site'
-
+NGINX_CSS_FILE: 'my.css'
+NGINX_JS_FILE: 'my.js'

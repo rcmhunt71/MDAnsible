@@ -28,10 +28,10 @@
 
 
 # 1b) Backup the primary Apache Website  (Windows) --> USES "OLD_VERSION"
-- import_playbook: backup_primary_website.yaml
+- import_playbook: steps/backup_primary_website.yaml
 
 # 1c) Backup the static content (Linux) --> USES "OLD_VERSION"
-- import_playbook: backup_static_web_content.yaml
+- import_playbook: steps/backup_static_web_content.yaml
 
 
 # 2) Get the file {version}.7z from ftp server
@@ -46,4 +46,5 @@
 
 # 7) Delete all my.js and my.css from /var/www/websites/site folder on NGINX
 #    - rm -rf /var/www/websites/media/site/*/my.js 
-#    - /var/www/websites/media/site/*/my.css
+#    - rm -rf /var/www/websites/media/site/*/my.css
+- import_playbook: steps/remove_media_js_css_files.yaml

@@ -9,7 +9,7 @@
   vars:
     ARCHIVE_FILE_NAME: '{{ OLD_VERSION }}_STATICS_BACKUP.7z'
   vars_files:
-    - vars/deployment_vars.yaml
+    - ../vars/deployment_vars.yaml
 
   tasks:
   # ----------------------------------------------------------------------------------------
