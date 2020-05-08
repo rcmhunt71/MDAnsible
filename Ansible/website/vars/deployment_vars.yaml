@@ -1,20 +1,41 @@
 # Web Deployment external variables
 
+# --------------------------------------------------------
 # WEB HOST DIRECTORIES (WINDOWS)
+# -----------------------------------------------------
+# Actual targets (when not testing):
+# WEBSOURCE DIR:         C:\
+# WEBSITES DIR:          C:\Websites
+# WEBSITES ARCHIVE DIR:  D:\Websites
+# --------------------------------------------------------
 WEB_SOURCE_DIR: 'C:\Users\rhunt\test'
 WEB_SITES_DIR: '{{ WEB_SOURCE_DIR }}\HOST'
 WEB_ARCHIVE_DIR: '{{ WEB_SOURCE_DIR }}\HOST_ARCHIVE'
 
 
+# --------------------------------------------------------
 # WEB STATICS DIRECTORIES (LINUX)
-STATIC_SOURCE_DIR: /home/rhunt/statics
-STATICS_DIR: '{{ STATIC_SOURCE_DIR }}/content'
+# --------------------------------------------------------
+# Actual targets (when not testing):
+# STATICS SOURCE DIR:   /var/wwww/websites/
+# STATICS DIR:          /var/www/websites/media
+# STATICS ARCHIVE DIR:  /var/www/websites/backup
+# --------------------------------------------------------
+STATICS_SOURCE_DIR: /home/rhunt/statics
+STATICS_DIR: '{{ STATICS_SOURCE_DIR }}/content'
 STATICS_ARCHIVE_DIR: '/tmp'
 
-
+# --------------------------------------------------------
 # NGINX DIRECTORIES (LINUX)
+# --------------------------------------------------------
+# Actual targets (when not testing):
+# NGINX SOURCE DIR: /var/www
+# NGINX WEBSITES DIR:  /var/www/websites
+# NGINX MEDIA SITE DIR: /var/www/websites/media/site
+# --------------------------------------------------------
 NGINX_SOURCE_DIR: /home/rhunt/nginx
-NGINX_WEBSITES_DIR: '{{ NGINX_SOURCE_DIR}}/websites'
+NGINX_WEBSITES_DIR: '{{ NGINX_SOURCE_DIR }}/websites'
 NGINX_MEDIA_SITE_DIR: '{{ NGINX_WEBSITES_DIR }}/media/site'
 NGINX_CSS_FILE: 'my.css'
 NGINX_JS_FILE: 'my.js'
+

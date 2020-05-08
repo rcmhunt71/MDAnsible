@@ -6,6 +6,8 @@
 # -------------------------------------------------
 # REQUIRED CLI ARGS:
 # - "OLD_VERSION": "Major.Minor.Hotfix.Build"
+# - "NEW_VERSION": "MAjor.Minor.Hotfix.Build"
+# - "ENV": <name of environment: PROD|UAT|STAGING|QA|DEV>
 # -------------------------------------------------
 
 
@@ -35,10 +37,10 @@
 
 
 # 2) Get the file {version}.7z from ftp server
-
 # 3) Extract the file
+# 4) Copy the contents to the primary server (Windows) --> USES "NEW VERSION" + "ENV"
+- import_playbook: steps/get_and_expand_zip_on_primary.yaml
 
-# 4) Copy the contents to the primary server (Windows)
 
 # 5) Copy the media folder to /var/www/websites of NGINX 
 
