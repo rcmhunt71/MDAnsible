@@ -5,7 +5,7 @@
 
 - name: Archive the current website
   hosts: web_hosts
-  gather_facts: yes
+  gather_facts: no
   vars:
     ARCHIVE_FILE_NAME: '{{ OLD_VERSION }}_BACKUP.7z'
   vars_files:
@@ -27,7 +27,7 @@
   - name: Archive the existing website directory
     win_shell: 'cmd /c "{{ ZIP_EXECUTABLE }}" a -bd -mx9 -sdel -r {{ ARCHIVE_FILE_NAME }} *'
     args:
-      chdir: '{{ WEB_SITES_DIR }}'
+      chdir: '{{ WEB_WEBSITES_DIR }}'
     register: _ARCHIVE_ZIP
 
   # ----------------------------------------------------------------------------------------
@@ -44,7 +44,7 @@
   # ----------------------------------------------------------------------------------------
   - name: Get the stat info about the ZIP file
     win_stat:
-      path: '{{ WEB_SITES_DIR }}\{{ ARCHIVE_FILE_NAME }}'
+      path: '{{ WEB_WEBSITES_DIR }}\{{ ARCHIVE_FILE_NAME }}'
     register: _ARCHIVE_SRC_FILE_STAT
 
   # ----------------------------------------------------------------------------------------
@@ -52,7 +52,7 @@
   # ----------------------------------------------------------------------------------------
   - name: Copy Archive File to Archive Directory
     win_copy:
-      src: '{{ WEB_SITES_DIR }}\{{ ARCHIVE_FILE_NAME }}'
+      src: '{{ WEB_WEBSITES_DIR }}\{{ ARCHIVE_FILE_NAME }}'
       dest: '{{ WEB_ARCHIVE_DIR }}\{{ ARCHIVE_FILE_NAME }}'
       backup: no
       remote_src: yes
@@ -71,7 +71,7 @@
   # ----------------------------------------------------------------------------------------
   - name: Delete SOURCE Archive file
     win_file:
-      path: '{{ WEB_SITES_DIR }}\{{ ARCHIVE_FILE_NAME }}'
+      path: '{{ WEB_WEBSITES_DIR }}\{{ ARCHIVE_FILE_NAME }}'
       state: absent
     when: 
       - _ARCHIVE_COPY_FILE_STAT.stat.exists 

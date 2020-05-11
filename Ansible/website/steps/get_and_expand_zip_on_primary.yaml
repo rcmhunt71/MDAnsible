@@ -1,4 +1,4 @@
-# Download ZIP file from FTP and extract/copy the source to the proper directory
+# Download ZIP file from FTP and extract/copy the source to the proper systems and directories
 
 # The following variables need to be provided via the commandline:
 #   NEW_VERSION - The version to be downloaded and deployed.
@@ -46,7 +46,7 @@
   - name: Move template to directory, acts as if FTP occurred.
     win_copy:
       src: '{{ WEB_ARCHIVE_DIR }}\{{ _NEW_VERSION_WEB_ZIP }}'
-      dest: '{{ WEB_SITES_DIR }}\{{ _NEW_VERSION_WEB_ZIP }}'
+      dest: '{{ WEB_WEBSITES_DIR }}\{{ _NEW_VERSION_WEB_ZIP }}'
       backup: no
       remote_src: yes
 
@@ -56,7 +56,7 @@
   - name: Unpack the zip in the target directory
     win_shell: 'cmd /c "{{ ZIP_EXECUTABLE }}" x -bd -y {{ _NEW_VERSION_WEB_ZIP }}'
     args:
-      chdir: '{{ WEB_SITES_DIR }}'
+      chdir: '{{ WEB_WEBSITES_DIR }}'
     register: UNZIP_RESULTS
 
   - debug: 
@@ -70,7 +70,5 @@
   # ----------------------------------------------------------------------------------------
   - name: Delete the zip file
     win_file:
-      path: '{{ WEB_SITES_DIR }}\{{ _NEW_VERSION_WEB_ZIP }}'
+      path: '{{ WEB_WEBSITES_DIR }}\{{ _NEW_VERSION_WEB_ZIP }}'
       state: absent
-
-

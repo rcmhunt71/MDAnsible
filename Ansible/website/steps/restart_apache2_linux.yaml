@@ -1,0 +1,30 @@
+# Restart the Apache service
+
+- name: Restart the Apache Daemon
+  hosts: web_static
+  gather_facts: no
+  become: yes
+  become_method: sudo
+
+  vars_files:
+    - ../vars/deployment_vars.yaml
+
+  tasks:
+  # ----------------------------------------------------------------------------------------
+  # Restart the Apache2 Daemon/Service
+  # ----------------------------------------------------------------------------------------
+  - name: Restart the Apache2 Service Daemon
+    service:
+      name: apache2
+      state: restarted
+
+  # ----------------------------------------------------------------------------------------
+  # Verify service is active
+  # ----------------------------------------------------------------------------------------
+  - name: Verify apache2 is up and active
+    service_facts:
+
+  - debug:
+      msg: 
+      - 'APACHE2: {{ ansible_facts.services.apache2 }}'
+      - 'STATUS: {{ ansible_facts.services.state }}'

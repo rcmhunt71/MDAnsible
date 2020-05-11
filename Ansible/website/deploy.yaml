@@ -10,9 +10,13 @@
 # - "ENV": <name of environment: PROD|UAT|STAGING|QA|DEV>
 # -------------------------------------------------
 
+- name: Get web server information 
+  hosts: web_servers
+  gather_facts: yes
+  vars_files:
+    - vars/deployment_vars.yaml
 
 # 1) Backup the current version
-
 # 1a) Backup the pclender database
 # ---------------------------------------------------------------------------
 # CREATE PLAYBOOK FOR THE FOLLOWING (using checklist from prod):
@@ -23,14 +27,12 @@
 #        d. Select Structure & Data
 #        e. Export to D:\Backup\ and choose an appropriate file name
 #        f. Export
-- name: Deploy the Web image to the target servers
-  hosts: web_hosts
-  vars_files:
-    - vars/deployment_vars.yaml
+# - import_playbook: <TBD>
 
 
 # 1b) Backup the primary Apache Website  (Windows) --> USES "OLD_VERSION"
 - import_playbook: steps/backup_primary_website.yaml
+
 
 # 1c) Backup the static content (Linux) --> USES "OLD_VERSION"
 - import_playbook: steps/backup_static_web_content.yaml
@@ -39,14 +41,15 @@
 # 2) Get the file {version}.7z from ftp server
 # 3) Extract the file
 # 4) Copy the contents to the primary server (Windows) --> USES "NEW VERSION" + "ENV"
-- import_playbook: steps/get_and_expand_zip_on_primary.yaml
-
-
 # 5) Copy the media folder to /var/www/websites of NGINX 
+- import_playbook: steps/get_and_expand_zip_on_primary.yaml
+- import_playbook: steps/archive_and_store_media_files.yaml
+- import_playbook: steps/copy_and_unzip_media_files_to_static.yaml
+
 
 # 6) Restart the Apache services
+# - import_playbook: <TBD>
+
 
 # 7) Delete all my.js and my.css from /var/www/websites/site folder on NGINX
-#    - rm -rf /var/www/websites/media/site/*/my.js 
-#    - rm -rf /var/www/websites/media/site/*/my.css
-- import_playbook: steps/remove_media_js_css_files.yaml
+ - import_playbook: steps/remove_media_js_css_files.yaml

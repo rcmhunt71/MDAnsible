@@ -9,32 +9,36 @@
 # WEBSITES ARCHIVE DIR:  D:\Websites
 # --------------------------------------------------------
 WEB_SOURCE_DIR: C:\Users\rhunt\test
-WEB_SITES_DIR: '{{ WEB_SOURCE_DIR }}\HOST'
-WEB_ARCHIVE_DIR: '{{ WEB_SOURCE_DIR }}\HOST_ARCHIVE'
-
+WEB_WEBSITES_DIR: '{{ WEB_SOURCE_DIR }}\websites'
+WEB_MEDIA_DIR: '{{ WEB_WEBSITES_DIR }}\media'
+WEB_ARCHIVE_DIR: '{{ WEB_SOURCE_DIR }}\backup'
 
 # --------------------------------------------------------
 # WEB STATICS DIRECTORIES (LINUX)
 # --------------------------------------------------------
 # Actual targets (when not testing):
-# STATICS SOURCE DIR:   /var/wwww/websites/
-# STATICS DIR:          /var/www/websites/media
-# STATICS ARCHIVE DIR:  /var/www/websites/backup
+# STATICS SOURCE DIR:         /var/www
+# STATICS WEBSITES DIR:       /var/www/websites
+# STATICS WEBSITE MEDIA DIR:  /var/www/websites/media
+# STATICS MEDIA SITE DIR:     /var/www/websites/media/site
 # --------------------------------------------------------
-STATICS_SOURCE_DIR: /home/rhunt/statics
-STATICS_DIR: '{{ STATICS_SOURCE_DIR }}/content'
-STATICS_ARCHIVE_DIR: /tmp
+STATICS_BASE_DIR: /home/rhunt/nginx
+STATICS_WEBSITES_DIR: '{{ STATICS_BASE_DIR }}/websites'
+STATICS_MEDIA_DIR: '{{ STATICS_WEBSITES_DIR }}/media'
+STATICS_MEDIA_SITE_DIR: '{{ STATICS_MEDIA_DIR }}/site'
+STATICS_ARCHIVE_DIR: '{{ STATICS_BASE_DIR }}/archive'
+STATICS_CSS_FILE: my.css
+STATICS_JS_FILE: my.js
+
+# TESTING PURPOSES
+STATICS_ARCHIVE_FILE: '{{ STATICS_BASE_DIR }}/archive.zip'
 
 # --------------------------------------------------------
-# NGINX DIRECTORIES (LINUX)
+# LOCAL (ANSIBLE MASTER NODE) DIRECTORIES 
 # --------------------------------------------------------
-# Actual targets (when not testing):
-# NGINX SOURCE DIR: /var/www
-# NGINX WEBSITES DIR:  /var/www/websites
-# NGINX MEDIA SITE DIR: /var/www/websites/media/site
+LOCAL_TMP: /tmp
+
 # --------------------------------------------------------
-NGINX_SOURCE_DIR: /home/rhunt/nginx
-NGINX_WEBSITES_DIR: '{{ NGINX_SOURCE_DIR }}/websites'
-NGINX_MEDIA_SITE_DIR: '{{ NGINX_WEBSITES_DIR }}/media/site'
-NGINX_CSS_FILE: my.css
-NGINX_JS_FILE: my.js
+# IMAGE FILE INFOMATION
+# --------------------------------------------------------
+MEDIA_ZIP_FILE: media.static.zip

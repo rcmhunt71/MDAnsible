@@ -5,9 +5,9 @@
 
 - name: Archive the static web files
   hosts: web_static
-  gather_facts: yes
+  gather_facts: no
   vars:
-    ARCHIVE_FILE_NAME: '{{ OLD_VERSION }}_STATICS_BACKUP.7z'
+    _ARCHIVE_FILE_NAME: '{{ OLD_VERSION }}_STATICS_BACKUP.7z'
   vars_files:
     - ../vars/deployment_vars.yaml
 
@@ -18,19 +18,20 @@
   - debug:
       msg:
       - 'OLD_VERSION: {{ OLD_VERSION }}'
-      - 'ARCHIVE_FILE_NAME: {{ ARCHIVE_FILE_NAME }}'
+      - 'ARCHIVE_FILE_NAME: {{ _ARCHIVE_FILE_NAME }}'
 
   # ----------------------------------------------------------------------------------------
-  # Check if the zip already exists in the archive dir; if so, DELETE IT (for now)
+  # Check if the ARCHIVE ZIP FILE already exists in the archive dir; 
+  # If so, DELETE IT (for now).
   # ----------------------------------------------------------------------------------------
   - name: Check for the existance of the archived zip file
     stat:
-      path: '{{ STATICS_ARCHIVE_DIR }}/{{ ARCHIVE_FILE_NAME }}'
+      path: '{{ STATICS_ARCHIVE_DIR }}/{{ _ARCHIVE_FILE_NAME }}'
     register: _ARCHIVE_EXISTS
 
   - name: Delete existing ZIP file
     file:
-      path: '{{ STATICS_ARCHIVE_DIR }}/{{ ARCHIVE_FILE_NAME }}'
+      path: '{{ STATICS_ARCHIVE_DIR }}/{{ _ARCHIVE_FILE_NAME }}'
       state: absent
     when: _ARCHIVE_EXISTS.stat.exists
 
@@ -39,8 +40,8 @@
   # ----------------------------------------------------------------------------------------
   - name: Archive the existing website static directory
     archive:
-      path: '{{ STATICS_DIR }}'
-      dest: '{{ STATICS_ARCHIVE_DIR }}/{{ ARCHIVE_FILE_NAME }}'
+      path: '{{ STATICS_MEDIA_DIR }}'
+      dest: '{{ STATICS_ARCHIVE_DIR }}/{{ _ARCHIVE_FILE_NAME }}'
       remove: yes
       owner: rhunt
       mode: 0644
@@ -51,7 +52,7 @@
   # ----------------------------------------------------------------------------------------
   - name: Get archived file stat information
     stat:
-      path: '{{ STATICS_ARCHIVE_DIR }}/{{ ARCHIVE_FILE_NAME }}'
+      path: '{{ STATICS_ARCHIVE_DIR }}/{{ _ARCHIVE_FILE_NAME }}'
     register: _STATIC_ZIP_FILE_INFO
 
   - debug:
@@ -67,21 +68,21 @@
   # ----------------------------------------------------------------------------------------
   - name: Get list of directories in source directory. (Archiving does not remove the directories)
     find:
-      path: '{{ STATICS_DIR }}/'
+      path: '{{ STATICS_MEDIA_SITE_DIR }}/'
       hidden: true
       recurse: true
       file_type: directory
     register: _TARGET_DEL_DIRS
 
   - debug:
-       msg: '{{ item.path }}'
-    loop: {{ _TARGET_DEL_DIRS.files }}
+      msg: '{{ item.path }}'
+    loop: '{{ _TARGET_DEL_DIRS.files }}'
 
   # ----------------------------------------------------------------------------------------
   # Delete the identified directories
   # ----------------------------------------------------------------------------------------
   - name: Delete directories found in source directory
     file:
-      path: {{ item.path }}
+      path: '{{ item.path }}'
       state: absent
-    with_items: {{ _TARGET_DEL_DIRS.files }}
+    with_items: '{{ _TARGET_DEL_DIRS.files }}'

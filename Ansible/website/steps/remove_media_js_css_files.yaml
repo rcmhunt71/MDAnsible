@@ -1,25 +1,33 @@
 # Remove all instances of my.js and my.css from the system
 
 - name: Remove Mortgage Director specific JavaScript and CSS files
-  hosts: web_nginx
-  gather_facts: yes
+  hosts: web_static
+  gather_facts: no
   vars_files:
     - ../vars/deployment_vars.yaml
 
   tasks:
   # ----------------------------------------------------------------------------------------
+  # Check target dir exists (otherwise this fails silently)
+  # ----------------------------------------------------------------------------------------
+  - name: Check target dir exists
+    stat: 
+      path: '{{ STATICS_MEDIA_SITE_DIR }}"
+    register: _TARGET_DIR_EXISTS
+
+  # ----------------------------------------------------------------------------------------
   # Find all files matching the following specifications
   # ----------------------------------------------------------------------------------------
   - name: Get list of directories in source directory. (Archiving does not remove the directories)
     find:
-      path: '{{ NGINX_MEDIA_SITE_DIR }}'
+      path: '{{ STATICS_MEDIA_SITE_DIR }}'
       recurse: true
-      patterns: '{{ NGINX_CSS_FILE }},{{ NGINX_JS_FILE }}'
-    register: _NGINX_MY_CSS_JS_FILES
+      patterns: '{{ STATICS_CSS_FILE }},{{ STATICS_JS_FILE }}'
+    register: _STATICS_MY_CSS_JS_FILES
 
   - debug:
       msg: '{{ item.path }}'
-    loop: '{{ _NGINX_MY_CSS_JS_FILES.files }}'
+    loop: '{{ _STATICS_MY_CSS_JS_FILES.files }}'
 
   # ----------------------------------------------------------------------------------------
   # Delete the identified files
@@ -28,20 +36,20 @@
     file:
       path: '{{ item.path }}'
       state: absent
-    with_items: '{{ _NGINX_MY_CSS_JS_FILES.files }}'
+    with_items: '{{ _STATICS_MY_CSS_JS_FILES.files }}'
 
   # ----------------------------------------------------------------------------------------
   # Check that all files matching the specifications were deleted
   # ----------------------------------------------------------------------------------------
   - name: Check that all files matching the specifications were deleted.
     find:
-      path: '{{ NGINX_MEDIA_SITE_DIR }}'
+      path: '{{ STATICS_MEDIA_SITE_DIR }}'
       recurse: true
-      patterns: '{{ NGINX_CSS_FILE }}, {{ NGINX_JS_FILE }}'
-    register: _NGINX_MY_CSS_JS_FILES
+      patterns: '{{ STATICS_CSS_FILE }}, {{ STATICS_JS_FILE }}'
+    register: _STATICS_MY_CSS_JS_FILES
 
   - debug:
       msg: 
       - "my.(js|css) files that still exist:" 
       - "{{ item.path }}"
-    loop: '{{ _NGINX_MY_CSS_JS_FILES.files }}'
+    loop: '{{ _STATICS_MY_CSS_JS_FILES.files }}'

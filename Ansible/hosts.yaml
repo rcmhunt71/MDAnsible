@@ -31,12 +31,3 @@ all:
               ansible_port: 12222
               ansible_user: rhunt
               ansible_connection: smart
-
-        web_nginx: 
-          hosts:
-            pcldevlab01:
-              ansible_host: PCLDEVAPACHE.DEVELOPMENT.PCLENDER.LOCAL
-#              ansible_host: PCLDEVLAB01.DEVELOPMENT.PCLENDER.LOCAL (NOT REACHABLE FROM VPN; needs 10.* address)
-              ansible_port: 12222
-              ansible_user: rhunt
-              ansible_connection: smart  
