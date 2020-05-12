@@ -31,3 +31,11 @@ all:
               ansible_port: 12222
               ansible_user: rhunt
               ansible_connection: smart
+
+        web_db:
+          hosts:
+            pcldevwebdb01:
+              ansible_host: PCLDEVWEBDB01.DEVELOPMENT.PCLENDER.LOCAL
+              ansible_port: 12222
+              ansible_user: rhunt
+              ansible_connection: smart
