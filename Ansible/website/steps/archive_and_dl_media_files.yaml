@@ -13,13 +13,13 @@
 
   vars:
     _MEDIA_ARCHIVE_FILE: "{{ NEW_VERSION }}_{{ MEDIA_ZIP_FILE }}"
- 
+
   tasks:
   # ----------------------------------------------------------------------------------------
   # Archive the media directory into media.zip ZIP file.
   # ----------------------------------------------------------------------------------------
-  - debug: 
-      msg: 
+  - debug:
+      msg:
         - 'MEDIA ZIP FILE: {{ _MEDIA_ARCHIVE_FILE }}'
 
   - name: Archive the media directory into MEDIA_ARCHIVE_FILE
@@ -28,7 +28,7 @@
       chdir: '{{ WEB_MEDIA_DIR  }}'
     register: UNZIP_RESULTS
 
-  - debug: 
+  - debug:
       msg:
         - "CMD: {{ UNZIP_RESULTS.cmd }}"
         - "FAILED? {{ UNZIP_RESULTS.failed }}"
@@ -61,7 +61,7 @@
       fail_on_missing: yes
 
   - debug:
-      msg: 
+      msg:
         - 'Copied:'
         - 'Source: {{ WEB_ARCHIVE_DIR}}\{{ _MEDIA_ARCHIVE_FILE }}'
         - 'Destination: Master Node:{{ LOCAL_TMP }}/{{ _MEDIA_ARCHIVE_FILE }}'
