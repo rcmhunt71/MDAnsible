@@ -1,0 +1,69 @@
+# Detect and Restart the Apache services
+- name: Restart the Apache Daemon
+  hosts: web_hosts
+  gather_facts: no
+
+  vars_files:
+    - ../vars/deployment_vars.yaml
+
+  vars:
+    _OLD_APACHE: "Apache2.2-Zend"
+    _NEW_APACHE: "Apache2.4"
+    _COMBINED:
+      - '{{ _OLD_APACHE }}'
+      - '{{ _NEW_APACHE }}'
+
+  tasks:
+  # ----------------------------------------------------------------------------------------
+  # Check which Apache2 Services are installed.
+  # There different "flavors" possible:  see _SVC_NAMES definition for list
+  # ----------------------------------------------------------------------------------------
+  - name: Check if the old version of Apache is installed.
+    win_service:
+      name: '{{ item }}'
+    with_items: '{{ _COMBINED }}'
+    ignore_errors: yes
+    register: _SERVICES
+
+  - debug:
+      msg:
+      - '{{ item.item }} --> Service exists? {{ item.exists }}'
+    with_items: '{{ _SERVICES.results }}'
+
+
+  # ----------------------------------------------------------------------------------------
+  # Restart the installed Apache2 services.
+  # ----------------------------------------------------------------------------------------
+  - name: Restart Apache
+    win_service:
+      name: item.name
+#      status: restarted
+    with_items: '{{ _SERVICES.results }}'
+    when: item.exists
+
+  # ----------------------------------------------------------------------------------------
+  # Verify the installed Apache2 services are active.
+  # Fail if any detected services are not "running".
+  # ----------------------------------------------------------------------------------------
+  # Get the status of running services.
+  - name: Check if Apache is now active.
+    win_service:
+      name: item.name
+    with_items: '{{ _SERVICES.results }}'
+    when: item.exists
+    register: _UPDATED_STATUS
+
+  # Show the status of all existing services.
+  - debug:
+      msg:
+      - '{{ item.item.item }} - {{ item.item.state }}'
+    with_items: '{{ _UPDATED_STATUS.results }}'
+    when: item.item.exists
+
+  # Fail if not running.
+  - name: Fail if any existing services are not "running"
+    fail:
+      msg: '{item.item.name} is not ACTIVE'
+    with_items: '{{ _UPDATED_STATUS.results }}'
+    when:  item.item.exists and item.item.state != 'running'
+

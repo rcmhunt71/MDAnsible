@@ -41,15 +41,17 @@
 # 2) Get the file {version}.7z from ftp server
 # 3) Extract the file
 # 4) Copy the contents to the primary server (Windows) --> USES "NEW VERSION" + "ENV"
-# 5) Copy the media folder to /var/www/websites of NGINX 
 - import_playbook: steps/get_and_expand_zip_on_primary.yaml
-- import_playbook: steps/archive_and_store_media_files.yaml
+
+
+# 5) Copy the media folder to /var/www/websites of NGINX 
+- import_playbook: steps/archive_and_dl_media_files.yaml
 - import_playbook: steps/copy_and_unzip_media_files_to_static.yaml
 
 
 # 6) Restart the Apache services
-# - import_playbook: <TBD>
+- import_playbook: steps/restart_apache2_linux.yaml
 
 
 # 7) Delete all my.js and my.css from /var/www/websites/site folder on NGINX
- - import_playbook: steps/remove_media_js_css_files.yaml
+- import_playbook: steps/remove_media_js_css_files.yaml
