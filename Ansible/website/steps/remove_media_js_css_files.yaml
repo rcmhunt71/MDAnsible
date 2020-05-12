@@ -11,8 +11,8 @@
   # Check target dir exists (otherwise this fails silently)
   # ----------------------------------------------------------------------------------------
   - name: Check target dir exists
-    stat: 
-      path: '{{ STATICS_MEDIA_SITE_DIR }}"
+    stat:
+      path: '{{ STATICS_MEDIA_SITE_DIR }}'
     register: _TARGET_DIR_EXISTS
 
   # ----------------------------------------------------------------------------------------
@@ -49,7 +49,7 @@
     register: _STATICS_MY_CSS_JS_FILES
 
   - debug:
-      msg: 
-      - "my.(js|css) files that still exist:" 
+      msg:
+      - "my.(js|css) files that still exist:"
       - "{{ item.path }}"
     loop: '{{ _STATICS_MY_CSS_JS_FILES.files }}'

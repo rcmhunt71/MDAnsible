@@ -21,7 +21,7 @@
       - 'ARCHIVE_FILE_NAME: {{ _ARCHIVE_FILE_NAME }}'
 
   # ----------------------------------------------------------------------------------------
-  # Check if the ARCHIVE ZIP FILE already exists in the archive dir; 
+  # Check if the ARCHIVE ZIP FILE already exists in the archive dir;
   # If so, DELETE IT (for now).
   # ----------------------------------------------------------------------------------------
   - name: Check for the existance of the archived zip file
@@ -56,7 +56,7 @@
     register: _STATIC_ZIP_FILE_INFO
 
   - debug:
-      msg: 
+      msg:
       - 'Copied to: {{ _STATIC_ZIP_FILE.dest }}'
       - 'Size: {{ _STATIC_ZIP_FILE_INFO.stat.size }} bytes'
       - 'Archive Contents:'
