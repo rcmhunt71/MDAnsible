@@ -1,0 +1,14 @@
+# This playbook backups all mysql databases into separate files.
+- name: backup mysql
+- hosts: web_db
+  tasks:
+    - name: Create a Backup of the Database
+      mysql_db:
+        name: wordpress
+        state: dump
+        target: /var/www/html/wordpress.sql
+        login_host: localhost
+        login_user: root
+        login_password: 123456
+      become: yes
+      become_method: sudo
