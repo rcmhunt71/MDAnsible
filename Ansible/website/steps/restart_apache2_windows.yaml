@@ -6,13 +6,6 @@
   vars_files:
     - ../vars/deployment_vars.yaml
 
-  vars:
-    _OLD_APACHE: "Apache2.2-Zend"
-    _NEW_APACHE: "Apache2.4"
-    _COMBINED:
-      - '{{ _OLD_APACHE }}'
-      - '{{ _NEW_APACHE }}'
-
   tasks:
   # ----------------------------------------------------------------------------------------
   # Check which Apache2 Services are installed.
@@ -21,7 +14,7 @@
   - name: Check if the old version of Apache is installed.
     win_service:
       name: '{{ item }}'
-    with_items: '{{ _COMBINED }}'
+    with_items: '{{ APACHE_SERVICES }}'
     ignore_errors: yes
     register: _SERVICES
 
