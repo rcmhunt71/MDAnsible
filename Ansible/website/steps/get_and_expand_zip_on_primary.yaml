@@ -9,8 +9,8 @@
   gather_facts: no
 
   vars_files:
-    - ../vars/deployment_vars.yaml
-    - ../vars/ftp_server.yaml
+    - ../group_vars/vars/deployment_vars.yaml
+    - ../group_vars/vars/ftp_server.yaml
     - ../../OS/windows/vars/zip_utility.yaml
 
   vars:

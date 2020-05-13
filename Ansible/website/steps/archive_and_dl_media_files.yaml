@@ -8,7 +8,7 @@
   gather_facts: no
 
   vars_files:
-    - ../vars/deployment_vars.yaml
+    - ../group_vars/vars/deployment_vars.yaml
     - ../../OS/windows/vars/zip_utility.yaml
 
   vars:

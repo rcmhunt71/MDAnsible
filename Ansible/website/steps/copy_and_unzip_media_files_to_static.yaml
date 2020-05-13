@@ -9,7 +9,7 @@
   gather_facts: no
 
   vars_files:
-    - ../vars/deployment_vars.yaml
+    - ../group_vars/vars/deployment_vars.yaml
 
   vars:
     _MEDIA_ARCHIVE_FILE: "{{ NEW_VERSION }}_{{ MEDIA_ZIP_FILE }}"
