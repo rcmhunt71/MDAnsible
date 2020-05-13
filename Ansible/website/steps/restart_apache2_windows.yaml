@@ -14,7 +14,7 @@
   - name: Check if the old version of Apache is installed.
     win_service:
       name: '{{ item }}'
-    with_items: '{{ APACHE_SERVICES }}'
+    with_items: '{{ APACHE_WIN_SERVICES }}'
     ignore_errors: yes
     register: _SERVICES
 

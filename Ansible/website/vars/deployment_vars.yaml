@@ -38,11 +38,10 @@ STATICS_ARCHIVE_FILE: '{{ STATICS_BASE_DIR }}/archive.zip'
 # --------------------------------------------------------
 LOCAL_TMP: /tmp
 
-
 # --------------------------------------------------------
 # WINDOWS APACHE SERVICE NAMES
 # --------------------------------------------------------
-APACHE_SERVICES:
+APACHE_WIN_SERVICES:
   - Apache2.2-2Zend
   - Apache2.4
 
