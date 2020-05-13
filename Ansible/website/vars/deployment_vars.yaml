@@ -53,7 +53,7 @@ MEDIA_ZIP_FILE: media.static.zip
 # --------------------------------------------------------
 # BUILD IMAGE ARCHIVE - BASE FILE NAME
 # --------------------------------------------------------
-WEB_DB_TABLE: TBD
+WEB_DB_TABLE: all
 WEB_DB_USER: TBD
 WEB_DB_PASSWORD: '<<USE ANSIBLE_VAULT >>'
 WEB_DB_BACKUP_DIR: 'D:\Backup'
