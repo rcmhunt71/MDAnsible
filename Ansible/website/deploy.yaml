@@ -16,8 +16,11 @@
     - vars/deployment_vars.yaml
 
 
-# 1) Backup the current version (Linux?)
-# 1a) Backup the pclender database
+# NOTE: Requires SQLDUMP utility to be installed on the DB server
+#       https://dev.mysql.com/doc/refman/5.7/en/mysqldump.html
+#
+# 1) Backup the current version
+# 1a) Backup the pclender database (Windows)
 # ---------------------------------------------------------------------------
 # CREATE PLAYBOOK FOR THE FOLLOWING (using checklist from prod):
 #   A. Backup pclender database on PCLUATWEBDB01 (10.0.102.21)

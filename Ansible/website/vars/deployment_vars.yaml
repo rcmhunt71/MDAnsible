@@ -30,11 +30,11 @@ STATICS_ARCHIVE_DIR: '{{ STATICS_BASE_DIR }}/archive'
 STATICS_CSS_FILE: my.css
 STATICS_JS_FILE: my.js
 
-# TESTING PURPOSES
+# FOR TESTING PURPOSES
 STATICS_ARCHIVE_FILE: '{{ STATICS_BASE_DIR }}/archive.zip'
 
 # --------------------------------------------------------
-# LOCAL (ANSIBLE MASTER NODE) DIRECTORIES 
+# LOCAL (ANSIBLE MASTER NODE) DIRECTORIES
 # --------------------------------------------------------
 LOCAL_TMP: /tmp
 
@@ -46,6 +46,14 @@ APACHE_WIN_SERVICES:
   - Apache2.4
 
 # --------------------------------------------------------
-# IMAGE FILE INFOMATION
+# BUILD IMAGE ARCHIVE - BASE FILE NAME
 # --------------------------------------------------------
 MEDIA_ZIP_FILE: media.static.zip
+
+# --------------------------------------------------------
+# BUILD IMAGE ARCHIVE - BASE FILE NAME
+# --------------------------------------------------------
+WEB_DB_TABLE: TBD
+WEB_DB_USER: TBD
+WEB_DB_PASSWORD: '<<USE ANSIBLE_VAULT >>'
+WEB_DB_BACKUP_DIR: 'D:\Backup'
