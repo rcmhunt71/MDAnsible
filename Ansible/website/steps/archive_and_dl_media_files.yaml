@@ -22,22 +22,34 @@
       msg:
         - 'MEDIA ZIP FILE: {{ _MEDIA_ARCHIVE_FILE }}'
 
-  - name: Archive the media directory into MEDIA_ARCHIVE_FILE
+  - name: Archive the media directory into _MEDIA_ARCHIVE_FILE
     win_shell: 'cmd /c "{{ ZIP_EXECUTABLE }}" a -bd -mx9 -r {{ _MEDIA_ARCHIVE_FILE }}'
     args:
       chdir: '{{ WEB_MEDIA_DIR  }}'
-    register: UNZIP_RESULTS
+    register: _ZIP_RESULTS
+
+  - name: Get ZIP file info
+    win_stat:
+      path: '{{ WEB_MEDIA_DIR  }}\{{ _MEDIA_ARCHIVE_FILE }}'
+    register: _ZIP_FILE_STAT
+
+  - name: FAIL if ZIP file does not exist
+    fail:
+      msg:
+        The ZIP file '{{ WEB_MEDIA_DIR  }}\{{ _MEDIA_ARCHIVE_FILE }}' does not exist.
+    when: not _ZIP_FILE_STAT.stat.exists
 
   - debug:
       msg:
-        - "CMD: {{ UNZIP_RESULTS.cmd }}"
-        - "FAILED? {{ UNZIP_RESULTS.failed }}"
-        - "{{ UNZIP_RESULTS.stdout_lines }}"
+        - "CMD: {{ _ZIP_RESULTS.cmd }}"
+        - "FAILED? {{ _ZIP_RESULTS.failed }}"
+        - "{{ _ZIP_RESULTS.stdout_lines }}"
 
   # ----------------------------------------------------------------------------------------
-  # Copy archived MEDIA file to archive (for copying and avoiding collisions with image)
+  # Copy archived MEDIA file to archive (for copying and avoiding collisions with
+  # current image, when it gets backed up during future upgrades)
   # ----------------------------------------------------------------------------------------
-  - name: Copy archived MEDIA file to archive (for copying and avoiding collisions with image)
+  - name: Copy archived MEDIA file to archive dir (to avoid collisions with installed image)
     win_copy:
       src: '{{ WEB_MEDIA_DIR }}\{{ _MEDIA_ARCHIVE_FILE }}'
       dest: '{{ WEB_ARCHIVE_DIR }}\{{ _MEDIA_ARCHIVE_FILE }}'
@@ -47,13 +59,16 @@
   # ----------------------------------------------------------------------------------------
   # Delete the ZIP file (the next deployment would unnecessarily archive it into the zip)
   # ----------------------------------------------------------------------------------------
-  - name: Delete the zip file
+  - name: Delete the zip file from the current image installation
     win_file:
       path: '{{ WEB_MEDIA_DIR }}\{{ _MEDIA_ARCHIVE_FILE }}'
       state: absent
 
-  - name: Copy file to Ansible master node (to be transferred to WebStatic host).
-    # Copying from Windows to Linux
+  # ----------------------------------------------------------------------------------------
+  # Copy the archived file to the Ansible master node for copying to Linux static web host
+  # ----------------------------------------------------------------------------------------
+  - name: Copy file to Ansible master node (to be transferred to static content web host)
+    # Copying from Windows to Linux (master ansible node)
     fetch:
       src: '{{ WEB_ARCHIVE_DIR }}\{{ _MEDIA_ARCHIVE_FILE }}'
       dest: '{{ LOCAL_TMP }}/'
@@ -62,6 +77,14 @@
 
   - debug:
       msg:
-        - 'Copied:'
+        - 'Copied ZIP to Ansible node.'
         - 'Source: {{ WEB_ARCHIVE_DIR}}\{{ _MEDIA_ARCHIVE_FILE }}'
-        - 'Destination: Master Node:{{ LOCAL_TMP }}/{{ _MEDIA_ARCHIVE_FILE }}'
+        - 'Destination: Master Node: {{ LOCAL_TMP }}/{{ _MEDIA_ARCHIVE_FILE }}'
+
+  # ----------------------------------------------------------------------------------------
+  # Delete the source ZIP file after transferring
+  # ----------------------------------------------------------------------------------------
+  - name: Delete the zip file from the current image installation
+    win_file:
+      path: '{{ WEB_ARCHIVE_DIR }}\{{ _MEDIA_ARCHIVE_FILE }}'
+      state: absent

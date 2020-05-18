@@ -58,10 +58,10 @@
 
 
 # 6) Restart the Apache services (Linux and Windows Servers)
-- import_playbook: steps/restart_apache2_linux.yaml
-- import_playbook: steps/restart_apache2_windows.yaml
+- import_playbook: steps/restart_service_linux.yaml
+- import_playbook: steps/restart_services_windows.yaml
 
 
 # 7) Delete all my.js & my.css from /var/www/websites/site folder
-- import_playbook: steps/remove_media_js_css_files.yaml
+- import_playbook: steps/remove_files_linux.yaml
 

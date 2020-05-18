@@ -7,6 +7,14 @@
     - ../group_vars/vars/deployment_vars.yaml
 
   tasks:
+  - name: Create a pattern string from list.
+    set_fact:
+      _TARGET_FILES: '{{ STATICS_CUSTOM_FILES | join(",") }}'
+
+  - debug:
+      msg:
+        'Target Files: {{ _TARGET_FILES }}'
+
   # ----------------------------------------------------------------------------------------
   # Check target dir exists (otherwise this fails silently)
   # ----------------------------------------------------------------------------------------
@@ -22,12 +30,12 @@
     find:
       path: '{{ STATICS_MEDIA_SITE_DIR }}'
       recurse: true
-      patterns: '{{ STATICS_CSS_FILE }},{{ STATICS_JS_FILE }}'
-    register: _STATICS_MY_CSS_JS_FILES
+      patterns: '{{ _TARGET_FILES }}'
+    register: _TARGET_FILE_INSTANCES
 
   - debug:
       msg: '{{ item.path }}'
-    loop: '{{ _STATICS_MY_CSS_JS_FILES.files }}'
+    loop: '{{ _TARGET_FILE_INSTANCES.files }}'
 
   # ----------------------------------------------------------------------------------------
   # Delete the identified files
@@ -36,7 +44,7 @@
     file:
       path: '{{ item.path }}'
       state: absent
-    with_items: '{{ _STATICS_MY_CSS_JS_FILES.files }}'
+    with_items: '{{ _TARGET_FILE_INSTANCES.files }}'
 
   # ----------------------------------------------------------------------------------------
   # Check that all files matching the specifications were deleted
@@ -45,11 +53,11 @@
     find:
       path: '{{ STATICS_MEDIA_SITE_DIR }}'
       recurse: true
-      patterns: '{{ STATICS_CSS_FILE }}, {{ STATICS_JS_FILE }}'
-    register: _STATICS_MY_CSS_JS_FILES
+      patterns: '{{ _TARGET_FILES }}'
+    register: _TARGET_FILE_INSTANCES
 
   - debug:
       msg:
-      - "my.(js|css) files that still exist:"
-      - "{{ item.path }}"
-    loop: '{{ _STATICS_MY_CSS_JS_FILES.files }}'
+      - '{{ _TARGET_FILE_INSTANCES }} files that still exist:'
+      - '{{ item.path }}'
+    loop: '{{ _TARGET_FILE_INSTANCES.files }}'

@@ -22,10 +22,10 @@
       - 'ARCHIVE_FILE_NAME: {{ _ARCHIVE_FILE_NAME }}'
 
   # ----------------------------------------------------------------------------------------
-  # Create a ZIP archive of the existing website
+  # Create a non-destructive ZIP archive of the existing website
   # ----------------------------------------------------------------------------------------
   - name: Archive the existing website directory
-    win_shell: 'cmd /c "{{ ZIP_EXECUTABLE }}" a -bd -mx9 -sdel -r {{ _ARCHIVE_FILE_NAME }} *'
+    win_shell: 'cmd /c "{{ ZIP_EXECUTABLE }}" a -bd -mx9 -r {{ _ARCHIVE_FILE_NAME }} *'
     args:
       chdir: '{{ WEB_WEBSITES_DIR }}'
     register: _ARCHIVE_ZIP
@@ -48,6 +48,20 @@
     register: _ARCHIVE_SRC_FILE_STAT
 
   # ----------------------------------------------------------------------------------------
+  # Check the file size, to make sure it has the correct minimum size, otherwise FAIL.
+  # It should not be an empty zip file, or have substantially less content than expected.
+  # ----------------------------------------------------------------------------------------
+  - name: Check that the ZIP file is populated (based on size).
+    fail:
+      msg: |
+       ZIP file did not meet the minimum requirements for size.
+       Please check the zip file contents '{{WEB_WEBSITES_DIR}}\{{ _ARCHIVE_FILE_NAME }}'.
+       EXPECTED Min File Size: {{ WEB_ZIP_MIN_SIZE_BYTES }} bytes.
+       ACTUAL File Size: {{ _ARCHIVE_SRC_FILE_STAT.stat.size }} bytes.
+    when:
+      - _ARCHIVE_SRC_FILE_STAT.stat.size < WEB_ZIP_MIN_SIZE_BYTES
+
+  # ----------------------------------------------------------------------------------------
   # Copy the Zip file to the target ARCHIVE directory
   # ----------------------------------------------------------------------------------------
   - name: Copy Archive File to Archive Directory
@@ -60,28 +74,16 @@
   # ----------------------------------------------------------------------------------------
   # Get the file stat information about the copied file
   # ----------------------------------------------------------------------------------------
-  - name: Get stat info about COPIED archive file
+  - name: Get file stat info about COPIED archive file
     win_stat:
       path: '{{ WEB_ARCHIVE_DIR }}\{{ _ARCHIVE_FILE_NAME }}'
     register: _ARCHIVE_COPY_FILE_STAT
 
   # ----------------------------------------------------------------------------------------
-  # Delete the original (src) zip file if the dest zip file exists and
-  # the checksums are the same
-  # ----------------------------------------------------------------------------------------
-  - name: Delete SOURCE Archive file
-    win_file:
-      path: '{{ WEB_WEBSITES_DIR }}\{{ _ARCHIVE_FILE_NAME }}'
-      state: absent
-    when:
-      - _ARCHIVE_COPY_FILE_STAT.stat.exists
-      - _ARCHIVE_COPY_FILE_STAT.stat.checksum == _ARCHIVE_SRC_FILE_STAT.stat.checksum
-
-  # ----------------------------------------------------------------------------------------
   # Unable to delete the file due to file missing or checksums do no match
   # so fail the playbook
   # ----------------------------------------------------------------------------------------
-  - name: Fail the copy process if the src file does not exactly match the dest file
+  - name: Fail the copy process if the src archive file does not exactly match the dest file
     fail:
       msg: |
         'COPIED Archive File exists: {{ _ARCHIVE_COPY_FILE_STAT.stat.exists }}'
@@ -90,3 +92,25 @@
     when: not _ARCHIVE_COPY_FILE_STAT.stat.exists or
       _ARCHIVE_COPY_FILE_STAT.stat.checksum != _ARCHIVE_SRC_FILE_STAT.stat.checksum
 
+
+  # ==================
+  #  CLEAN UP
+  # ==================
+
+  # ----------------------------------------------------------------------------------------
+  # Delete the original (src) zip file if the dest zip file exists and
+  # the checksums are the same
+  # ----------------------------------------------------------------------------------------
+  - name: Delete source zip archive file
+    win_file:
+      path: '{{ WEB_WEBSITES_DIR }}\{{ _ARCHIVE_FILE_NAME }}'
+      state: absent
+
+  # ---------------------------------------------------------------------------------------
+  # Delete the backed up content, now that the content has been zipped, archived
+  # and validated.
+  # ---------------------------------------------------------------------------------------
+  - name: Delete web content that was archived and backed up.
+    win_file:
+      path: '{{ WEB_WEBSITES_SITE_DIR }}'
+      state: absent

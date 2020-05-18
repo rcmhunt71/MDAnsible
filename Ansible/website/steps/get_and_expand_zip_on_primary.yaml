@@ -2,7 +2,7 @@
 
 # The following variables need to be provided via the commandline:
 #   NEW_VERSION - The version to be downloaded and deployed.
-#   ENV - The environment to leveage (prod|uat|staging|qa|dev)
+#   ENV - The environment to leverage (prod|uat|staging|qa|dev)
 
 - name: Download and install the new version of WEB Code
   hosts: web_hosts
@@ -43,12 +43,27 @@
   # ----------------------------------------------------------------------------------------
   # TEMP - Copy file to target directory (mimics FTP result)
   # ----------------------------------------------------------------------------------------
-  - name: Move template to directory, acts as if FTP occurred.
+  - name: TEMPORARY - Move template to directory, acts as if FTP occurred.
     win_copy:
       src: '{{ WEB_ARCHIVE_DIR }}\{{ _NEW_VERSION_WEB_ZIP }}'
       dest: '{{ WEB_WEBSITES_DIR }}\{{ _NEW_VERSION_WEB_ZIP }}'
       backup: no
       remote_src: yes
+
+  # ----------------------------------------------------------------------------------------
+  # Check that destination archive file exists. If it does not exist, FAIL.
+  # ----------------------------------------------------------------------------------------
+  - name: Check destination file (FTP'd) exists. If it does not exist, FAIL.
+    win_stat:
+      path: '{{ WEB_WEBSITES_DIR }}\{{ _NEW_VERSION_WEB_ZIP }}'
+    register: _FTP_FILE
+
+  - name: FAIL if the FTP'd file does not exist.
+    fail:
+      msg: |
+        The FTP'd file '{{ WEB_WEBSITES_DIR }}\{{ _NEW_VERSION_WEB_ZIP }}' does not
+        exist or was not found in the expected directory.
+    when: not _FTP_FILE.stat.exists
 
   # ----------------------------------------------------------------------------------------
   # Unpack the downloaded ZIP file.

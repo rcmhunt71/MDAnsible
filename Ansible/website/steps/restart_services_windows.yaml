@@ -1,5 +1,5 @@
-# Detect and Restart the Apache services
-- name: Restart the Apache Daemon
+# Detect and Restart the windows services
+- name: 'Restart the {{ WINDOWS_SERVICES }} Daemon'
   hosts: web_hosts
   gather_facts: no
 
@@ -8,13 +8,13 @@
 
   tasks:
   # ----------------------------------------------------------------------------------------
-  # Check which Apache2 Services are installed.
+  # Check which services are installed.
   # There different "flavors" possible:  see _SVC_NAMES definition for list
   # ----------------------------------------------------------------------------------------
-  - name: Check if the old version of Apache is installed.
+  - name: 'Check which {{ WINDOWS_SERVICES }} services installed.'
     win_service:
       name: '{{ item }}'
-    with_items: '{{ APACHE_WIN_SERVICES }}'
+    with_items: '{{ WINDOWS_SERVICES }}'
     ignore_errors: yes
     register: _SERVICES
 
@@ -25,9 +25,9 @@
 
 
   # ----------------------------------------------------------------------------------------
-  # Restart the installed Apache2 services.
+  # Restart the target services.
   # ----------------------------------------------------------------------------------------
-  - name: Restart Apache
+  - name: 'Restart existing services'
     win_service:
       name: item.name
 #      status: restarted
@@ -35,11 +35,11 @@
     when: item.exists
 
   # ----------------------------------------------------------------------------------------
-  # Verify the installed Apache2 services are active.
+  # Verify the installed services are active.
   # Fail if any detected services are not "running".
   # ----------------------------------------------------------------------------------------
   # Get the status of running services.
-  - name: Check if Apache is now active.
+  - name: 'Check if the services is now active'
     win_service:
       name: item.name
     with_items: '{{ _SERVICES.results }}'

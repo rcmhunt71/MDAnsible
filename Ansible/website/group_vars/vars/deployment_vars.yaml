@@ -11,7 +11,9 @@
 WEB_SOURCE_DIR: C:\Users\rhunt\test
 WEB_WEBSITES_DIR: '{{ WEB_SOURCE_DIR }}\websites'
 WEB_MEDIA_DIR: '{{ WEB_WEBSITES_DIR }}\media'
+WEB_WEBSITES_SITE_DIR: '{{ WEB_MEDIA_DIR }}\site'
 WEB_ARCHIVE_DIR: '{{ WEB_SOURCE_DIR }}\backup'
+WEB_ZIP_MIN_SIZE_BYTES: 50000
 
 # --------------------------------------------------------
 # WEB STATICS DIRECTORIES (LINUX)
@@ -27,8 +29,10 @@ STATICS_WEBSITES_DIR: '{{ STATICS_BASE_DIR }}/websites'
 STATICS_MEDIA_DIR: '{{ STATICS_WEBSITES_DIR }}/media'
 STATICS_MEDIA_SITE_DIR: '{{ STATICS_MEDIA_DIR }}/site'
 STATICS_ARCHIVE_DIR: '{{ STATICS_BASE_DIR }}/archive'
-STATICS_CSS_FILE: my.css
-STATICS_JS_FILE: my.js
+STATICS_CUSTOM_FILES:
+  - my.css
+  - my.js
+STATICS_ARCHIVE_FORMAT: gz
 
 # FOR TESTING PURPOSES
 STATICS_ARCHIVE_FILE: '{{ STATICS_BASE_DIR }}/archive.zip'
@@ -41,9 +45,10 @@ LOCAL_TMP: /tmp
 # --------------------------------------------------------
 # WINDOWS APACHE SERVICE NAMES
 # --------------------------------------------------------
-APACHE_WIN_SERVICES:
+WINDOWS_SERVICES:
   - Apache2.2-2Zend
   - Apache2.4
+LINUX_WEB_SERVICE: apache2
 
 # --------------------------------------------------------
 # BUILD IMAGE ARCHIVE - BASE FILE NAME

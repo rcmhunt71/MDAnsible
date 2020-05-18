@@ -20,8 +20,8 @@
   # ----------------------------------------------------------------------------------------
   - debug:
       msg:
-        - 'Copying: {{ LOCAL_TMP }}/{{ _MEDIA_ARCHIVE_FILE }}'
-        - 'Destination: {{ inventory_hostname }}/{{ _MEDIA_ARCHIVE_FILE }}'
+        - 'Source Archive: local_ansible_node:{{ LOCAL_TMP }}/{{ _MEDIA_ARCHIVE_FILE }}'
+        - 'Unarchive Destination: {{ inventory_hostname }}:{{ STATICS_MEDIA_DIR }}/'
 
   - name: Unzip the archive file
     unarchive:

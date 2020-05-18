@@ -6,10 +6,10 @@
 - name: Archive the static web files
   hosts: web_static
   gather_facts: no
-  vars:
-    _ARCHIVE_FILE_NAME: '{{ OLD_VERSION }}_STATICS_BACKUP.7z'
   vars_files:
     - ../group_vars/vars/deployment_vars.yaml
+  vars:
+    _ARCHIVE_FILE_NAME: '{{ OLD_VERSION }}_STATICS_BACKUP.{{ STATICS_ARCHIVE_FORMAT }}'
 
   tasks:
   # ----------------------------------------------------------------------------------------
@@ -36,24 +36,33 @@
     when: _ARCHIVE_EXISTS.stat.exists
 
   # ----------------------------------------------------------------------------------------
-  # Destructively archive the existing website statics and copy to STATICS_ARCHIVE_DIR
+  # Create a non-destructive archive the existing website statics and copy to
+  # STATICS_ARCHIVE_DIR
   # ----------------------------------------------------------------------------------------
   - name: Archive the existing website static directory
     archive:
       path: '{{ STATICS_MEDIA_DIR }}'
       dest: '{{ STATICS_ARCHIVE_DIR }}/{{ _ARCHIVE_FILE_NAME }}'
-      remove: yes
-      owner: rhunt
+      format: '{{ STATICS_ARCHIVE_FORMAT }}'
+      remove: no
+      owner: '{{ ansible_user }}'
       mode: 0644
     register: _STATIC_ZIP_FILE
 
   # ----------------------------------------------------------------------------------------
-  # Get information about the archived file (stat: size)
+  # Log information about the archived file
   # ----------------------------------------------------------------------------------------
   - name: Get archived file stat information
     stat:
       path: '{{ STATICS_ARCHIVE_DIR }}/{{ _ARCHIVE_FILE_NAME }}'
     register: _STATIC_ZIP_FILE_INFO
+
+  - name: If archive does not exist, FAIL.
+    fail:
+      msg: |
+        The archive file ({{ STATICS_ARCHIVE_DIR }}/{{_ARCHIVE_FILE_NAME}} does not
+        exist.
+    when: not _STATIC_ZIP_FILE_INFO.stat.exists
 
   - debug:
       msg:
@@ -63,10 +72,10 @@
       - '{{ _STATIC_ZIP_FILE.archived }}'
 
   # ----------------------------------------------------------------------------------------
-  # Deletion during the zipping process does not remove the directories.
-  # Get a list of the directories still in the source directory
+  # Deletion during the zipping process does not remove the files & directories.
+  # Get a list of the directories in the source directory
   # ----------------------------------------------------------------------------------------
-  - name: Get list of directories in source directory. (Archiving does not remove the directories)
+  - name: Get list of directories in source directory.
     find:
       path: '{{ STATICS_MEDIA_SITE_DIR }}/'
       hidden: true
@@ -74,15 +83,23 @@
       file_type: directory
     register: _TARGET_DEL_DIRS
 
+  - name: Get list of files in source directory.
+    find:
+      path: '{{ STATICS_MEDIA_SITE_DIR }}/'
+      hidden: true
+      recurse: false
+      file_type: file
+    register: _TARGET_DEL_FILES
+
   - debug:
       msg: '{{ item.path }}'
     loop: '{{ _TARGET_DEL_DIRS.files }}'
 
   # ----------------------------------------------------------------------------------------
-  # Delete the identified directories
+  # Delete the identified directories (and files)
   # ----------------------------------------------------------------------------------------
-  - name: Delete directories found in source directory
+  - name: Delete files directories found in source directory
     file:
       path: '{{ item.path }}'
       state: absent
-    with_items: '{{ _TARGET_DEL_DIRS.files }}'
+    with_items: '{{ _TARGET_DEL_DIRS.files + _TARGET_DEL_FILES.files }}'
