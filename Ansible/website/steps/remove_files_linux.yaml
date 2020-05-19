@@ -1,3 +1,5 @@
+---
+
 # Remove all instances of my.js and my.css from the system
 
 - name: Remove Mortgage Director specific JavaScript and CSS files
@@ -61,3 +63,6 @@
       - '{{ _TARGET_FILE_INSTANCES }} files that still exist:'
       - '{{ item.path }}'
     loop: '{{ _TARGET_FILE_INSTANCES.files }}'
+
+...
+

@@ -1,3 +1,5 @@
+---
+
 # The purpose of this playbook is archive files from one directory to another file and to 7z the structure into a single archive + delete archived files.
 
 - name: Create an archived file (.7z)
@@ -9,9 +11,9 @@
     - vars/directory_info.yaml
     - vars/zip_utility.yaml
 
-# ----------------------------------  
+# ----------------------------------
 # Steps in playbook
-# ---------------------------------- 
+# ----------------------------------
 
   tasks:
   - name: Make the test target directory
@@ -42,7 +44,10 @@
         register: ZIP_LISTING
 
       - debug:
-          msg: 
+          msg:
             - 'CMD: {{ ZIP_LISTING.cmd }}'
             - 'FAILED? {{ ZIP_LISTING.failed }}'
             - '{{ ZIP_LISTING.stdout_lines }}'
+
+...
+

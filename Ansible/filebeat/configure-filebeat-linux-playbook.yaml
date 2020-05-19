@@ -1,3 +1,5 @@
+---
+
 - hosts: pcldevapache
   remote_user: chunt
   become: yes
@@ -12,7 +14,8 @@
     log_path: /var/logs/apache2/*
 
   tasks:
-    - set_fact: logstash_port={{vars['logstash_port_'+ log_type|lower] }}
+    - name: Define logstash port
+      set_fact: logstash_port={{vars['logstash_port_'+ log_type|lower] }}
 
     - debug: var=[log_type]
     - debug: var=[logstash_port]
@@ -23,3 +26,6 @@
         dest: /etc/filebeat/filebeat.yml
         owner: root
         mode: 0644
+
+...
+

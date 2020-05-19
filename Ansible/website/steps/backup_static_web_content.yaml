@@ -1,3 +1,5 @@
+---
+
 # Archive/backup the current website static content to an archive directory on a LINUX server
 
 # The following variables need to be provided via the commandline:
@@ -103,3 +105,5 @@
       path: '{{ item.path }}'
       state: absent
     with_items: '{{ _TARGET_DEL_DIRS.files + _TARGET_DEL_FILES.files }}'
+
+...

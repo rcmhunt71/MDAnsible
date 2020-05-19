@@ -1,3 +1,5 @@
+---
+
 # Copy the image media archive to the static hosts and expand host.
 # Archive the media files (media directory of web image) for transfer to Linux host
 
@@ -28,3 +30,6 @@
       src:  '{{ LOCAL_TMP }}/{{ _MEDIA_ARCHIVE_FILE }}'
       dest: '{{ STATICS_MEDIA_DIR }}'
       remote_src: no
+
+...
+

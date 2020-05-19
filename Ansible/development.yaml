@@ -1,3 +1,5 @@
+---
+
 all:
   hosts:
     pcldevelastic01:
@@ -39,3 +41,5 @@ all:
               ansible_port: 12222
               ansible_user: rhunt
               ansible_connection: smart
+
+...

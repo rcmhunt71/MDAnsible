@@ -1,3 +1,5 @@
+---
+
 # Detect and Restart the windows services
 - name: 'Restart the {{ WINDOWS_SERVICES }} Daemon'
   hosts: web_hosts
@@ -59,4 +61,6 @@
       msg: '{item.item.name} is not ACTIVE'
     with_items: '{{ _UPDATED_STATUS.results }}'
     when:  item.item.exists and item.item.state != 'running'
+
+...
 

@@ -1,3 +1,5 @@
+---
+
 # Archive the media files (media directory of web image) for transfer to Linux host
 
 # The following variables need to be provided via the commandline:
@@ -88,3 +90,6 @@
     win_file:
       path: '{{ WEB_ARCHIVE_DIR }}\{{ _MEDIA_ARCHIVE_FILE }}'
       state: absent
+
+...
+

@@ -1,3 +1,5 @@
+---
+
 # This playbook backups all mysql databases into separate files.
 
 # The following variables need to be provided via the commandline:
@@ -23,3 +25,5 @@
         login_password: '{{ WEB_DB_PASSWORD }}'
       become: yes
       become_method: sudo
+
+...

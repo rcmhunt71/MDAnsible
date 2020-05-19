@@ -1,3 +1,5 @@
+---
+
 # Download ZIP file from FTP and extract/copy the source to the proper systems and directories
 
 # The following variables need to be provided via the commandline:
@@ -87,3 +89,6 @@
     win_file:
       path: '{{ WEB_WEBSITES_DIR }}\{{ _NEW_VERSION_WEB_ZIP }}'
       state: absent
+
+...
+

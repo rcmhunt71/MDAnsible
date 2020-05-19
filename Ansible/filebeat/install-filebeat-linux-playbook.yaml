@@ -1,3 +1,5 @@
+---
+
 - name: Install filebeat, if necessary
   hosts: pcldevapache
   remote_user: chunt
@@ -42,4 +44,6 @@
         update_cache: yes
         name: filebeat
       when: filebeat_installed is failed
+
+...
 
